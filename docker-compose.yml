@@ -1,0 +1,19 @@
+services:
+  application:
+    container_name: dictionarybot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      # The api token and application id are retrieved from the discord developer portal when creating a bot.
+      DISCORD_API_TOKEN: ${DISCORD_API_TOKEN:?error}
+      # FYI the bot invite link would be https://discord.com/oauth2/authorize?client_id=<INSERT APPLICATION_ID HERE>
+      APPLICATION_ID: ${APPLICATION_ID:?error}
+      # PYTHONUNBUFFERED just makes it so that print statements always show up. For some reason the output got
+      # buffered by default so I couldn't see my print statements. I don't care about any performance hit
+      # caused by unnecessary buffer flushing.
+      PYTHONUNBUFFERED: "1"
+      # Get this by right clicking on a channel and selecting "Copy channel ID" - if I recall I have some
+      # discord developer setting on, which enables me to see things like this.
+      CHANNEL_TO_SEND_TO: ${CHANNEL_TO_SEND_TO:?error}
+      
