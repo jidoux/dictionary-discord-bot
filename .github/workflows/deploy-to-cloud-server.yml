@@ -1,0 +1,52 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: My Oracle Cloud Server
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build and Deploy
+      shell: bash
+      env:
+        DOCKER_HUB_REPO_NAME: ${{ secrets.DOCKER_HUB_REPO_NAME }}
+        DOCKER_HUB_LOGIN_USERNAME: ${{ secrets.DOCKER_HUB_LOGIN_USERNAME }}
+        DOCKER_HUB_PAT: ${{ secrets.DOCKER_HUB_PAT }}
+        SERVER_IP: ${{ secrets.SERVER_IP }}
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        DISCORD_API_TOKEN: ${{ secrets.DISCORD_API_TOKEN }}
+        APPLICATION_ID: ${{ secrets.APPLICATION_ID }}
+        CHANNEL_TO_SEND_TO: ${{ secrets.CHANNEL_TO_SEND_TO }}
+      run: |
+        build_tag=dictionaryBot$(date +%s)
+        docker build . --file Dockerfile --tag "$DOCKER_HUB_REPO_NAME":$build_tag
+        docker login -u "$DOCKER_HUB_LOGIN_USERNAME" -p "$DOCKER_HUB_PAT"
+        docker push "$DOCKER_HUB_REPO_NAME":$build_tag
+
+        # Write the private key from secrets to a temp file
+        mkdir -p ~/.ssh
+        chmod 700 ~/.ssh
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+        chmod 600 ~/.ssh/deploy_key
+
+        ssh-keyscan -H "$SERVER_IP" >> ~/.ssh/known_hosts
+
+        ssh -i ~/.ssh/deploy_key opc@"$SERVER_IP" << ENDSSH
+          docker login -u "$DOCKER_HUB_LOGIN_USERNAME" -p "$DOCKER_HUB_PAT"
+          docker pull "$DOCKER_HUB_REPO_NAME":$build_tag
+          docker stop dictionarybot 2>/dev/null || true
+          docker rm dictionarybot 2>/dev/null || true
+          docker run -d \
+            --name dictionarybot \
+            --restart unless-stopped \
+            -e DISCORD_API_TOKEN="$DISCORD_API_TOKEN" \
+            -e APPLICATION_ID="$APPLICATION_ID" \
+            -e CHANNEL_TO_SEND_TO="$CHANNEL_TO_SEND_TO" \
+            "$DOCKER_HUB_REPO_NAME":$build_tag
+        ENDSSH
