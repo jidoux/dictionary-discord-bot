@@ -22,6 +22,7 @@ client: Client = Client(intents=intents, application_id=APPLICATION_ID)
 tree = app_commands.CommandTree(client)
 
 # Stuff I need to access in my dictionary_loop() coroutine; idk how else to do this.
+# TODO learn a better way to do this
 global CHANNEL_TO_SEND_TO
 global quiz
 global word_manager
@@ -57,7 +58,7 @@ async def on_message(message: Message) -> None:
     if message.author.bot:  # Check if the message is from a bot to avoid infinite loops
         return
 
-@tasks.loop(seconds=2)
+@tasks.loop(hours=24)
 async def dictionary_loop():
     word, dictionary_entry_of_word = word_manager.get_word_and_printable_definition()
     # print(f"dictionary_loop executed again; the word is: {dictionary_entry_of_word}\n")
@@ -65,7 +66,7 @@ async def dictionary_loop():
     channel = client.get_channel(CHANNEL_TO_SEND_TO)
     
     # https://discordpy.readthedocs.io/en/stable/api.html?highlight=poll#discord.Poll
-    poll = Poll(question="Did you know this word?", duration=timedelta(hours=20), multiple=True)
+    poll = Poll(question="Did you know this word?", duration=timedelta(hours=23), multiple=True)
     poll.add_answer(text="Yes")
     poll.add_answer(text="No")
     poll.add_answer(text="Idk")

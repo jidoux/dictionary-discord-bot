@@ -28,7 +28,7 @@ class Quiz:
     async def __setup_poll(self) -> None:
         random_words_with_definitions: list[QuizData] = self.__get_10_random_words_with_definitions()
         correct_word_and_definition: QuizData = self.__pick_question_and_answer(random_words_with_definitions)
-        poll_duration = timedelta(hours=1)  # Needs to be in hours per documentation
+        poll_duration = timedelta(hours=22)  # Needs to be in hours per documentation
         await self.__build_and_send_poll(random_words_with_definitions, correct_word_and_definition.definition, poll_duration)
         self._previously_sent_words.clear()
         await sleep(poll_duration.total_seconds() + 5) # Get the poll_duration time, add 5 seconds, then send the answer
