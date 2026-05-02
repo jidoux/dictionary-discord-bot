@@ -61,7 +61,9 @@ async def on_message(message: Message) -> None:
 @tasks.loop(hours=24)
 async def dictionary_loop():
     word, dictionary_entry_of_word = word_manager.get_word_and_printable_definition()
-    # print(f"dictionary_loop executed again; the word is: {dictionary_entry_of_word}\n")
+    definition_start_index = dictionary_entry_of_word.find("(") # the index where the (verb) or whatever starts
+    definition = dictionary_entry_of_word[definition_start_index:]
+    print(f"dictionary_loop executed again; the word is: {dictionary_entry_of_word}\n")
     global CHANNEL_TO_SEND_TO
     channel = client.get_channel(CHANNEL_TO_SEND_TO)
     
@@ -70,7 +72,8 @@ async def dictionary_loop():
     poll.add_answer(text="Yes")
     poll.add_answer(text="No")
     poll.add_answer(text="Idk")
-    await channel.send(content=f"The word of the day is: {dictionary_entry_of_word}\n")
+    word_with_spoilered_definition = f"**{word}**||{definition}||"
+    await channel.send(content=f"The word of the day is: {word_with_spoilered_definition}\n")
     await channel.send(poll=poll)
 
     global quiz

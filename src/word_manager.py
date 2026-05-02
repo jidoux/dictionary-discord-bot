@@ -65,8 +65,6 @@ class WordManager:
         return True
 
     def __populate_word_list(self, word_list_file_name_with_extension: str, encoding: str) -> None:
-        # For some reason doing word_list = [] doesn't work... seems to create a new local variable
-        # rather than using the global word_list.
         self._word_list.clear()  
         with open(word_list_file_name_with_extension, encoding=encoding) as infile:
             for line in infile:
