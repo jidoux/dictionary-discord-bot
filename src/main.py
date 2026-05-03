@@ -68,7 +68,7 @@ async def dictionary_loop():
     channel = client.get_channel(CHANNEL_TO_SEND_TO)
     
     # https://discordpy.readthedocs.io/en/stable/api.html?highlight=poll#discord.Poll
-    poll = Poll(question="Did you know this word?", duration=timedelta(hours=23), multiple=True)
+    poll = Poll(question=f"Did you know the word {word}?", duration=timedelta(hours=23), multiple=True)
     poll.add_answer(text="Yes")
     poll.add_answer(text="No")
     poll.add_answer(text="Idk")
