@@ -15,7 +15,7 @@ public sealed class DatabaseInterface(IDbContextFactory<AppDbContext> contextFac
 
 		Server server = new() {
 			DiscordGuildId = guildId,
-			TimeToSendDailyWordUTC = TimeOnly.MinValue, // arbitrary default - can be set with slashcommands, so.
+			TimeToSendDailyWordUTC = new TimeOnly(12, 0), // Arbitrary chosen time.. I figure its fine.
 		};
 		if (await db.Servers.AnyAsync(s => s.DiscordGuildId == server.DiscordGuildId)) {
 			// 99% use case - since this gets executed when the bot starts up, it can fail sometimes. Column also has

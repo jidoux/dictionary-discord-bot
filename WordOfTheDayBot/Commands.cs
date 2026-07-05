@@ -9,6 +9,7 @@ public sealed class Commands(DatabaseInterface databaseInterface) : ApplicationC
 	[SlashCommand("pong", "Pong!")]
 	public static string Pong() => "Ping!";
 
+	// TODO design this command at some point since its pretty bad lol
 	[SlashCommand("initbot", "Set the channel and daily send time for word-of-the-day messages")]
 	[RequireUserPermissions<ApplicationCommandContext>(Permissions.ManageGuild)]
 	public async Task<string> InitBot([SlashCommandParameter(
@@ -21,5 +22,4 @@ public sealed class Commands(DatabaseInterface databaseInterface) : ApplicationC
 
 		return $"The word of the day will send at channel <#{channel.Id}>, at {hourUtc}:00 UTC.";
 	}
-
 }
