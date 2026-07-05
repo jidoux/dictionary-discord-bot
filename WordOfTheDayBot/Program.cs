@@ -26,8 +26,7 @@ builder.Services
 	builder.Configuration.AddUserSecrets<Program>();
 #endif
 
-// TODO I figure its fine for these to be singletons, since there should only be 1 instance, but try to understand how this changes things... is
-// there even a difference between this and scoped?? I would think not.
+// I figure the different scopes would be each individual handlker
 builder.Services.AddScoped<MainLoop>();
 builder.Services.AddScoped<WordManager>();
 builder.Services.AddScoped<DatabaseInterface>();
@@ -36,11 +35,11 @@ builder.Services.AddScoped<UnexpectedErrorHandler>(); // Most services depend on
 
 builder.Services.AddHttpClient<DictionaryApiInterface>();
 
-builder.Services.AddDbContext<AppDbContext>(options => {
+// The factory always needs to be initialized before normal dbcontext to prevent error.
+builder.Services.AddDbContextFactory<AppDbContext>(options => {
 	string supabaseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new Exception("DatabaseConnectionString is null");
 	DbContextOptionsBuilder? dbContextOptions = options.UseNpgsql(supabaseConnectionString);
 	if (builder.Environment.IsDevelopment()) {
-		// Adding additional logging, only for local development.
 		dbContextOptions.EnableSensitiveDataLogging()
 		.LogTo(
 			Console.WriteLine,

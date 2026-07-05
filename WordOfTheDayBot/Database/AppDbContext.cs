@@ -39,6 +39,7 @@ public class AppDbContext : DbContext {
 	}
 }
 
+// TODO - ensure this works. Copied from stackoverflow and looks right at a glance but really I don't know at all ahahahaha
 public class DateOnlyConverter : ValueConverter<DateOnly, DateTime> {
 	public DateOnlyConverter() : base(
 		dateOnly => dateOnly.ToDateTime(TimeOnly.MinValue),

@@ -39,7 +39,7 @@ public abstract record DefinitionLookupResult {
 	public sealed record Error(string Reason, HttpStatusCode StatusCode) : DefinitionLookupResult;
 }
 
-// Not including some fields that I don't expect I will care about. All fields can be seen at https://dictionaryapi.dev/
+// Not including some fields that I don't expect I will care about.
 public class DictionaryApiResponse {
 	[JsonPropertyName("word")]
 	public required string Word { get; set; }

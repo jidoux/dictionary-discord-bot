@@ -2,7 +2,8 @@
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".github/workflows/deploy-to-cloud-server.yml" />
+    <File Path="Dockerfile" />
     <File Path="README.md" />
   </Folder>
-  <Project Path="src/WordOfTheDayBot/WordOfTheDayBot.csproj" />
+  <Project Path="WordOfTheDayBot/WordOfTheDayBot.csproj" />
 </Solution>

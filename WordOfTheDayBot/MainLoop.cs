@@ -9,13 +9,12 @@ public sealed class MainLoop(DatabaseInterface databaseInterface, WordManager wo
 			DateTime nextHour = now.Date.AddHours(now.Hour + 1);
 			TimeSpan delayUntilNextHour = nextHour - now;
 
-			//await Task.Delay(delayUntilNextHour);
-			await Task.Delay(10000); // TODO DELETEME 3 (there are 2 more of these, indubitably.
+			await Task.Delay(delayUntilNextHour);
 
 			await DoHourlyWork();
 		}
 	}
-
+	
 	private async Task DoHourlyWork() {
 		int currentHourUTC = DateTime.UtcNow.Hour;
 		List<Server> allServersToSendToRightNow;
@@ -35,7 +34,7 @@ public sealed class MainLoop(DatabaseInterface databaseInterface, WordManager wo
 		foreach (Server server in allServersToSendToRightNow) {
 			try {
 				WordAndDefinitions currentWordAndDefinition = await GetUsableWordForServer(initialWordAndDefinition, server);
-				// TODO - ideally this should be done atomically... but yeah idk.
+				// TODO - ideally this should be done atomically... but yeah idk. Maybe its not the word thing ever, idk.
 				await messageSender.SendWordOfTheDayPoll(currentWordAndDefinition, server.DiscordChannelIdToSendWordsTo);
 				await databaseInterface.AddSentWordToServer(currentWordAndDefinition.Word, server.Id);
 			}
@@ -58,5 +57,5 @@ public sealed class MainLoop(DatabaseInterface databaseInterface, WordManager wo
 		}
 
 		throw new Exception($"We tried {maxAttempts} times and could not find a good word and definitions.. this should never get executed");
-	} 
+	}
 }

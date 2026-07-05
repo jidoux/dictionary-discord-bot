@@ -1,0 +1,12 @@
+# Only used if I want to debug my docker deployments locally... not used by github actions.
+services:
+  application:
+    container_name: dictionarybot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      Discord__Token: ${Discord__Token:?error}
+      ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection:?error}
+    ports:
+      - "5432:5432"

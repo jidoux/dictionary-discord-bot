@@ -1,6 +1,6 @@
 ﻿namespace WordOfTheDayBot;
 
-public class UnexpectedErrorHandler {
+public sealed class UnexpectedErrorHandler {
 	public async Task HandlerError(Exception ex, string? additionalMessage = null) {
 		// I figure I should probably guarantee this never throws
 		try {
