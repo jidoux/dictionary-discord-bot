@@ -3,7 +3,6 @@
     <File Path=".editorconfig" />
     <File Path=".github/workflows/deploy-to-cloud-server.yml" />
     <File Path="README.md" />
-    <File Path="word_pool.txt" />
   </Folder>
   <Project Path="src/WordOfTheDayBot/WordOfTheDayBot.csproj" />
 </Solution>

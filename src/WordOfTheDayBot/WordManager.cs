@@ -1,19 +1,43 @@
 ﻿namespace WordOfTheDayBot;
 
-public sealed class WordManager {
+public sealed class WordManager(DictionaryApiInterface dictionaryApiInterface) {
 	private readonly Lazy<ValueTask<string[]>> _allWords = new(async () => {
-		// TODO will the directory be different when this is a docker image??
-		using StreamReader streamReader = new(@"..\..\word_pool.txt");
+		// TODO test this when its a docker image
+		const string wordPoolPath = "word_pool.json";
+		using StreamReader streamReader = new(wordPoolPath);
 		string fileAsString = await streamReader.ReadToEndAsync();
 		return JsonSerializer.Deserialize<string[]>(fileAsString) ?? throw new Exception("Could not deserialize, somehow, idk");
 	});
 
 	public async Task<WordAndDefinitions> GetWordAndAllDefinitions() {
 		string[] allWords = await _allWords.Value;
-		string word = allWords[Random.Shared.Next(allWords.Length)];
-		List<string> definitions = [];
-		return new WordAndDefinitions(word, definitions);
+		while (true) {
+			string word = allWords[Random.Shared.Next(allWords.Length)];
+			List<DefinitionAndPartOfSpeech>? possibleDefinitions = await GetDefinitionsFromWord(word);
+			if (possibleDefinitions is not null) {
+				return new WordAndDefinitions(word, possibleDefinitions);
+			}
+		}
+	}
+
+	// TODO test the word entangle, somewthing weird happened with the definition which idk if its my fault or not but probably is... it newlined the , or smth idk
+	private async Task<List<DefinitionAndPartOfSpeech>?> GetDefinitionsFromWord(string word) {
+		DefinitionLookupResult definitionLookupResult = await dictionaryApiInterface.GetDefinitions(word);
+		if (definitionLookupResult is DefinitionLookupResult.Found foundDefinitions) {
+			return foundDefinitions.Definitions;
+		}
+		else if (definitionLookupResult is DefinitionLookupResult.NotFound) {
+			// The caller will interpret this as "I need to get another word".
+			return null;
+		}
+		else {
+			// Somewhere down the line this will get caught and we will just silently continue.
+			throw new Exception("The API was down, for some reason");
+		}
+
 	}
 }
 
-public record WordAndDefinitions(string Word, List<string> Definitions);
+public record WordAndDefinitions(string Word, List<DefinitionAndPartOfSpeech> Definitions);
+
+public record DefinitionAndPartOfSpeech(string Definition, string PartOfSpeech);

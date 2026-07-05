@@ -1,5 +1,9 @@
 global using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using NetCord.Hosting.Gateway;
 using NetCord.Hosting.Services;
 using NetCord.Hosting.Services.ApplicationCommands;
@@ -28,6 +32,9 @@ builder.Services.AddScoped<MainLoop>();
 builder.Services.AddScoped<WordManager>();
 builder.Services.AddScoped<DatabaseInterface>();
 builder.Services.AddScoped<MessageSender>();
+builder.Services.AddScoped<UnexpectedErrorHandler>(); // Most services depend on this
+
+builder.Services.AddHttpClient<DictionaryApiInterface>();
 
 builder.Services.AddDbContext<AppDbContext>(options => {
 	string supabaseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new Exception("DatabaseConnectionString is null");

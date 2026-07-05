@@ -1,7 +1,33 @@
-﻿namespace WordOfTheDayBot;
+﻿using NetCord;
+using NetCord.Rest;
+using System.Text;
 
-public class MessageSender {
-	public async Task SendWordOfTheDayPoll(WordAndDefinitions wordAndDefinitions, ulong guildId) {
-		Console.Write($"Sending word of the day poll: {JsonSerializer.Serialize(wordAndDefinitions)}, {guildId}");
+namespace WordOfTheDayBot;
+
+public class MessageSender(RestClient restClient) {
+	public async Task SendWordOfTheDayPoll(WordAndDefinitions wordAndDefinitions, ulong channelId) {
+		StringBuilder definitionsText = new();
+		foreach (DefinitionAndPartOfSpeech definitionAndPartOfSpeech in wordAndDefinitions.Definitions) {
+			definitionsText.AppendLine($"(*{definitionAndPartOfSpeech.PartOfSpeech}*): {definitionAndPartOfSpeech.Definition}");
+		}
+		var poll = new MessagePollProperties(
+			question: new MessagePollMediaProperties { Text = $"Did you know the word {wordAndDefinitions.Word}?" },
+			answers: [
+				new MessagePollAnswerProperties(new MessagePollMediaProperties() {
+					Text = "Yes"
+				}),
+				new MessagePollAnswerProperties(new MessagePollMediaProperties() {
+					Text = "No"
+				}),
+				new MessagePollAnswerProperties(new MessagePollMediaProperties() {
+					Text = "Idk"
+				})
+				]
+			)
+			.WithDurationInHours(23);
+		await restClient.SendMessageAsync(channelId, new MessageProperties {
+			Content = $"The word of the day is: **{wordAndDefinitions.Word}**\n||{definitionsText}||",
+			Poll = poll
+		});
 	}
 }

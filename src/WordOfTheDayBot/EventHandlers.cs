@@ -10,7 +10,7 @@ Few notes:
 some kind of entry point already, which is nice.
 */
 
-//public sealed class MessageCreateHandler : IMessageCreateGatewayHandler
+//public sealed class MessageCreateHandler : IMessageCreateGatewayHandler {
 
 // This fires when the bot starts up, or when the bot joins a given server.
 public sealed class GuildJoinHandler(DatabaseInterface databaseInterface) : IGuildCreateGatewayHandler {
