@@ -14,8 +14,8 @@ jobs:
     - name: Build and Deploy
       shell: bash
       env:
-        DISCORD_TOKEN: ${{ secrets.Discord__Token }}
-        DATABASE_CONNECTION_STRING: ${{ secrets.ConnectionStrings__DefaultConnection }}
+        DISCORD_TOKEN: ${{ secrets.DISCORD__TOKEN }}
+        DATABASE_CONNECTION_STRING: ${{ secrets.CONNECTIONSTRINGS__DEFAULTCONNECTION }}
         SERVER_IP: ${{ secrets.SERVER_IP }}
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: |
