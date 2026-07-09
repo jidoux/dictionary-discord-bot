@@ -2,7 +2,7 @@
 
 namespace WordOfTheDayBot;
 
-public sealed class MainLoop(DatabaseInterface databaseInterface, WordManager wordManager, MessageSender messageSender, UnexpectedErrorHandler unexpectedErrorHandler) {
+public sealed class MainLoop(DatabaseInterface databaseInterface, WordManager wordManager, MessageSender messageSender, UnexpectedErrorHandler unexpectedErrorHandler, ILogger<MainLoop> logger) {
 	public async Task RunHourly() {
 		while (true) {
 			DateTime now = DateTime.Now;
@@ -21,13 +21,21 @@ public sealed class MainLoop(DatabaseInterface databaseInterface, WordManager wo
 		WordAndDefinitions initialWordAndDefinition;
 
 		try {
+			logger.LogInformation("DoHourlyWork() called once again");
+
 			allServersToSendToRightNow = await databaseInterface.FindAllServersToSendForThisUTCHour(currentHourUTC);
+			if (allServersToSendToRightNow.Count == 0) {
+				return;
+			}
+			if (logger.IsEnabled(LogLevel.Information)) {
+				logger.LogInformation("Found {ServerCount} servers to send a word to {Server}", allServersToSendToRightNow.Count, string.Join(',', allServersToSendToRightNow.Select(x => x.DiscordGuildId)));
+			}
 			// I want an initial one, which is shared, mostly for performance reasons, but I also like the consistency.
 			initialWordAndDefinition = await wordManager.GetWordAndAllDefinitions();
 		}
 		catch (Exception ex) {
 			// I figure if this line executes, then its fine to just fail this and try again next hour.
-			await unexpectedErrorHandler.HandlerError(ex);
+			await unexpectedErrorHandler.HandleError(ex);
 			return;
 		}
 
@@ -41,7 +49,7 @@ public sealed class MainLoop(DatabaseInterface databaseInterface, WordManager wo
 			catch (Exception ex) {
 				// This line can get executed when the dictionary API is down as I throw an exception in that case.
 				// Beyond that, it would be fully unexpected.
-				await unexpectedErrorHandler.HandlerError(ex);
+				await unexpectedErrorHandler.HandleError(ex);
 			}
 		}
 	}

@@ -1,12 +1,15 @@
 global using System.Text.Json;
+global using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using NetCord.Hosting.Gateway;
 using NetCord.Hosting.Services;
 using NetCord.Hosting.Services.ApplicationCommands;
+using Serilog;
+using Serilog.Core;
+using Serilog.Events;
 using WordOfTheDayBot;
 using WordOfTheDayBot.Database;
 
@@ -35,6 +38,15 @@ builder.Services.AddScoped<UnexpectedErrorHandler>(); // Most services depend on
 
 builder.Services.AddHttpClient<DictionaryApiInterface>();
 
+builder.Services.AddSerilog((services, loggerConfig) => loggerConfig
+	.Enrich.With<UtcTimestampEnricher>()
+	.WriteTo.File(
+		path: Path.Join("Logs", "log-.txt"),
+		rollingInterval: RollingInterval.Day,
+		outputTemplate: "{UtcTimestamp:yyyy-MM-dd HH:mm:ss} UTC [{Level:u3}] {Message:lj}{NewLine}{Exception}"
+	)
+);
+
 // The factory always needs to be initialized before normal dbcontext to prevent error.
 builder.Services.AddDbContextFactory<AppDbContext>(options => {
 	string supabaseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new Exception("DatabaseConnectionString is null");
@@ -55,3 +67,10 @@ IHost host = builder.Build();
 host.AddModules(typeof(Program).Assembly);
 
 await host.RunAsync();
+
+public class UtcTimestampEnricher : ILogEventEnricher {
+	public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory) {
+		logEvent.AddOrUpdateProperty(
+			propertyFactory.CreateProperty("UtcTimestamp", DateTime.UtcNow));
+	}
+}

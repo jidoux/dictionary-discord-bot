@@ -1,5 +1,6 @@
 ﻿using NetCord.Gateway;
 using NetCord.Hosting.Gateway;
+using Serilog.Core;
 
 namespace WordOfTheDayBot;
 
@@ -13,21 +14,24 @@ some kind of entry point already, which is nice.
 //public sealed class MessageCreateHandler : IMessageCreateGatewayHandler {
 
 // This fires when the bot starts up, or when the bot joins a given server.
-public sealed class GuildJoinHandler(DatabaseInterface databaseInterface) : IGuildCreateGatewayHandler {
+public sealed class GuildJoinHandler(DatabaseInterface databaseInterface, ILogger<GuildJoinHandler> logger) : IGuildCreateGatewayHandler {
 	public async ValueTask HandleAsync(GuildCreateEventArgs arg) {
+		logger.LogInformation("GuildJoinHandler called");
 		await databaseInterface.AddServerIfNotExists(arg.GuildId);
 	}
 }
 
-// It looks like this does actually only fire when you kick the bot from the server, or whatever, so this is pretty nice.
-public sealed class GuildExitHandler(DatabaseInterface databaseInterface) : IGuildDeleteGatewayHandler {
+// This seems reasonable enough. Not foolproof, but whatever.
+public sealed class GuildExitHandler(DatabaseInterface databaseInterface, ILogger<GuildExitHandler> logger) : IGuildDeleteGatewayHandler {
 	public async ValueTask HandleAsync(GuildDeleteEventArgs arg) {
+		logger.LogInformation("GuildExitHandler called");
 		await databaseInterface.DeleteServerByGuildId(arg.GuildId);
 	}
 }
 
-public sealed class ReadyHandler(MainLoop mainLoop) : IReadyGatewayHandler {
+public sealed class ReadyHandler(MainLoop mainLoop, ILogger<ReadyHandler> logger) : IReadyGatewayHandler {
 	public async ValueTask HandleAsync(ReadyEventArgs arg) {
+		logger.LogInformation("ReadyHandler called");
 		await mainLoop.RunHourly();
 	}
 }

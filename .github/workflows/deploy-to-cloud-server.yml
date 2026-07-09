@@ -1,3 +1,4 @@
+# On the actual machine, the volume (which contains some logs that I want for observability reasons) is at /var/lib/docker/volumes/Logs
 name: Put code on server and restart bot over there
 
 on:
@@ -41,5 +42,6 @@ jobs:
             -e DISCORD__TOKEN="$DISCORD__TOKEN" \
             -e CONNECTIONSTRINGS__DEFAULTCONNECTION="$CONNECTIONSTRINGS__DEFAULTCONNECTION" \
             -p 5432:5432 \
+            -v Logs:/Logs \
             word-of-the-day-robot
         ENDSSH
