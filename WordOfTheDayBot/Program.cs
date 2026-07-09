@@ -16,6 +16,8 @@ using WordOfTheDayBot.Database;
 // Just so that I don't forget where this is: https://netcord.dev/docs and https://netcord.dev/guides/getting-started/installation.html
 // TODO improve the editorconfig
 
+Serilog.Debugging.SelfLog.Enable(msg => Console.Error.WriteLine($"SERILOG ERROR: {msg}")); // I figure this might help... or at least keep me saner.
+
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 builder.Services
@@ -34,12 +36,14 @@ builder.Services.AddScoped<MainLoop>();
 builder.Services.AddScoped<WordManager>();
 builder.Services.AddScoped<DatabaseInterface>();
 builder.Services.AddScoped<MessageSender>();
-builder.Services.AddScoped<UnexpectedErrorHandler>(); // Most services depend on this
+builder.Services.AddScoped<UnexpectedErrorHandler>();
 
 builder.Services.AddHttpClient<DictionaryApiInterface>();
 
 builder.Services.AddSerilog((services, loggerConfig) => loggerConfig
+	.ReadFrom.Configuration(builder.Configuration)
 	.Enrich.With<UtcTimestampEnricher>()
+	.WriteTo.Console()
 	.WriteTo.File(
 		path: Path.Join("Logs", "log-.txt"),
 		rollingInterval: RollingInterval.Day,

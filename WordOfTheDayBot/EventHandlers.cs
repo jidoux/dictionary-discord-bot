@@ -16,7 +16,7 @@ some kind of entry point already, which is nice.
 // This fires when the bot starts up, or when the bot joins a given server.
 public sealed class GuildJoinHandler(DatabaseInterface databaseInterface, ILogger<GuildJoinHandler> logger) : IGuildCreateGatewayHandler {
 	public async ValueTask HandleAsync(GuildCreateEventArgs arg) {
-		logger.LogInformation("GuildJoinHandler called");
+		logger.LogDebug("GuildJoinHandler called");
 		await databaseInterface.AddServerIfNotExists(arg.GuildId);
 	}
 }
@@ -24,14 +24,14 @@ public sealed class GuildJoinHandler(DatabaseInterface databaseInterface, ILogge
 // This seems reasonable enough. Not foolproof, but whatever.
 public sealed class GuildExitHandler(DatabaseInterface databaseInterface, ILogger<GuildExitHandler> logger) : IGuildDeleteGatewayHandler {
 	public async ValueTask HandleAsync(GuildDeleteEventArgs arg) {
-		logger.LogInformation("GuildExitHandler called");
+		logger.LogDebug("GuildExitHandler called");
 		await databaseInterface.DeleteServerByGuildId(arg.GuildId);
 	}
 }
 
 public sealed class ReadyHandler(MainLoop mainLoop, ILogger<ReadyHandler> logger) : IReadyGatewayHandler {
 	public async ValueTask HandleAsync(ReadyEventArgs arg) {
-		logger.LogInformation("ReadyHandler called");
+		logger.LogDebug("ReadyHandler called");
 		await mainLoop.RunHourly();
 	}
 }

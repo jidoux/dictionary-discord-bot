@@ -17,6 +17,7 @@ jobs:
       env:
         DISCORD__TOKEN: ${{ secrets.DISCORD__TOKEN }}
         CONNECTIONSTRINGS__DEFAULTCONNECTION: ${{ secrets.CONNECTIONSTRINGS__DEFAULTCONNECTION }}
+        SERILOG__MINIMUMLEVEL__DEFAULT: ${{ secrets.SERILOG__MINIMUMLEVEL__DEFAULT }}
         SERVER_IP: ${{ secrets.SERVER_IP }}
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: |
@@ -41,7 +42,8 @@ jobs:
             --restart unless-stopped \
             -e DISCORD__TOKEN="$DISCORD__TOKEN" \
             -e CONNECTIONSTRINGS__DEFAULTCONNECTION="$CONNECTIONSTRINGS__DEFAULTCONNECTION" \
+            -e SERILOG__MINIMUMLEVEL__DEFAULT="$SERILOG__MINIMUMLEVEL__DEFAULT" \
             -p 5432:5432 \
-            -v Logs:/Logs \
+            -v Logs:/app/Logs \
             word-of-the-day-robot
         ENDSSH

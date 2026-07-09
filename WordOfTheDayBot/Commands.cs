@@ -5,7 +5,7 @@ using NetCord.Services.ApplicationCommands;
 namespace WordOfTheDayBot;
 
 // For now not touching UserCommand or MessageCommand just cuz can't think of any reason I'd need it.
-public sealed class Commands(DatabaseInterface databaseInterface, UnexpectedErrorHandler unexpectedErrorHandler) : ApplicationCommandModule<ApplicationCommandContext> {
+public sealed class Commands(DatabaseInterface databaseInterface, UnexpectedErrorHandler unexpectedErrorHandler, ILogger<Commands> logger) : ApplicationCommandModule<ApplicationCommandContext> {
 	//[SlashCommand("pong", "Pong!")]
 	//public static string Pong() => "Ping!";
 
@@ -16,6 +16,7 @@ public sealed class Commands(DatabaseInterface databaseInterface, UnexpectedErro
 		[SlashCommandParameter(Description = "Channel to send the word of the day in")] TextChannel channel,
 		[SlashCommandParameter(Description = "Hour to send at, in UTC (0-23)", MinValue = 0, MaxValue = 23)] int hourUtc) {
 		try {
+			logger.LogDebug("InitBot command executed.");
 			if (Context.Guild is null) {
 				return "An internal error occurred, which has been logged. Please try again later";
 				throw new Exception("Context.Guild is null, somehow: " + JsonSerializer.Serialize(Context));
