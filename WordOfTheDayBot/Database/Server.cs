@@ -7,7 +7,7 @@ public class Server {
 	public int Id { get; init; }
 	public ulong DiscordGuildId { get; init; }
 	public ulong DiscordChannelIdToSendWordsTo { get; set; }
-	public TimeOnly TimeToSendDailyWordUTC { get; set; }
+	public int HourToSendDailyWordUTC { get; set; }
 	public DateTime EnterDateTimeUTC { get; }
 }
 

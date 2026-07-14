@@ -9,11 +9,11 @@ public sealed class WordManager(DictionaryApiInterface dictionaryApiInterface) {
 		return JsonSerializer.Deserialize<string[]>(fileAsString) ?? throw new Exception("Could not deserialize, somehow, idk");
 	});
 
-	public async Task<WordAndDefinitions> GetWordAndAllDefinitions() {
+	public async Task<WordAndDefinitions> GetWordAndAllDefinitions(CancellationToken stoppingToken) {
 		string[] allWords = await _allWords.Value;
 		while (true) {
 			string word = allWords[Random.Shared.Next(allWords.Length)];
-			List<DefinitionAndPartOfSpeech>? possibleDefinitions = await GetDefinitionsFromWord(word);
+			List<DefinitionAndPartOfSpeech>? possibleDefinitions = await GetDefinitionsFromWord(word, stoppingToken);
 			if (possibleDefinitions is not null) {
 				return new WordAndDefinitions(word, possibleDefinitions);
 			}
@@ -21,8 +21,8 @@ public sealed class WordManager(DictionaryApiInterface dictionaryApiInterface) {
 	}
 
 	// TODO test the word entangle, somewthing weird happened with the definition which idk if its my fault or not but probably is... it newlined the , or smth idk
-	private async Task<List<DefinitionAndPartOfSpeech>?> GetDefinitionsFromWord(string word) {
-		DefinitionLookupResult definitionLookupResult = await dictionaryApiInterface.GetDefinitions(word);
+	private async Task<List<DefinitionAndPartOfSpeech>?> GetDefinitionsFromWord(string word, CancellationToken stoppingToken) {
+		DefinitionLookupResult definitionLookupResult = await dictionaryApiInterface.GetDefinitions(word, stoppingToken);
 		if (definitionLookupResult is DefinitionLookupResult.Found foundDefinitions) {
 			return foundDefinitions.Definitions;
 		}

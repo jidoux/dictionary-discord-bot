@@ -27,7 +27,10 @@ public sealed class Commands(DatabaseInterface databaseInterface, UnexpectedErro
 				return "This channel does not exist in your server, sorry!";
 			}
 
-			await databaseInterface.SaveServerSettings(guildId, channel.Id, hourUtc);
+			if (hourUtc > 23 || hourUtc < 0) {
+				return "Invalid hour value specified.";
+			} 
+			await databaseInterface.SaveServerSettings(guildId, channel.Id, hourUtc, CancellationToken.None);
 
 			return $"The word of the day will send at channel <#{channel.Id}>, at {hourUtc}:00 UTC.";
 		}

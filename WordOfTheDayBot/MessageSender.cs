@@ -5,7 +5,7 @@ using System.Text;
 namespace WordOfTheDayBot;
 
 public class MessageSender(RestClient restClient) {
-	public async Task SendWordOfTheDayPoll(WordAndDefinitions wordAndDefinitions, ulong channelId) {
+	public async Task SendWordOfTheDayPoll(WordAndDefinitions wordAndDefinitions, ulong channelId, CancellationToken stoppingToken) {
 		StringBuilder definitionsText = new();
 		foreach (DefinitionAndPartOfSpeech definitionAndPartOfSpeech in wordAndDefinitions.Definitions) {
 			definitionsText.AppendLine($"(*{definitionAndPartOfSpeech.PartOfSpeech}*): {definitionAndPartOfSpeech.Definition}");
@@ -28,6 +28,6 @@ public class MessageSender(RestClient restClient) {
 		await restClient.SendMessageAsync(channelId, new MessageProperties {
 			Content = $"The word of the day is: **{wordAndDefinitions.Word}**\n||{definitionsText}||",
 			Poll = poll
-		});
+		}, cancellationToken: stoppingToken);
 	}
 }

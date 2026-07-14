@@ -11,12 +11,7 @@ public class AppDbContext : DbContext {
 
 	public DbSet<Server> Servers { get; set; }
 	public DbSet<SentWord> SentWords { get; set; }
-
-	protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder) {
-		base.ConfigureConventions(configurationBuilder);
-		configurationBuilder.Properties<DateOnly>()
-			.HaveConversion<DateOnlyConverter>();
-	}
+	public DbSet<Error> Errors { get; set; }
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder) {
 		base.OnModelCreating(modelBuilder);
@@ -37,11 +32,4 @@ public class AppDbContext : DbContext {
 			optionsBuilder.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
 		}
 	}
-}
-
-// TODO - ensure this works. Copied from stackoverflow and looks right at a glance but really I don't know at all ahahahaha
-public class DateOnlyConverter : ValueConverter<DateOnly, DateTime> {
-	public DateOnlyConverter() : base(
-		dateOnly => dateOnly.ToDateTime(TimeOnly.MinValue),
-		dateTime => DateOnly.FromDateTime(dateTime)) { }
 }

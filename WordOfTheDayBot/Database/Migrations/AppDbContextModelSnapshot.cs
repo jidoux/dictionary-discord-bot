@@ -23,6 +23,32 @@ namespace WordOfTheDayBot.Database.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("WordOfTheDayBot.Database.Error", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AdditionalMessage")
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
+
+                    b.Property<DateTime>("EnterDateTimeUTC")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("timezone('utc', now())");
+
+                    b.Property<string>("Exception")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Errors", "wordbot");
+                });
+
             modelBuilder.Entity("WordOfTheDayBot.Database.SentWord", b =>
                 {
                     b.Property<int>("Id")
@@ -69,8 +95,8 @@ namespace WordOfTheDayBot.Database.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("timezone('utc', now())");
 
-                    b.Property<TimeOnly>("TimeToSendDailyWordUTC")
-                        .HasColumnType("time without time zone");
+                    b.Property<int>("HourToSendDailyWordUTC")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

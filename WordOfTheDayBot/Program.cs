@@ -1,9 +1,6 @@
 global using System.Text.Json;
 global using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using NetCord.Hosting.Gateway;
 using NetCord.Hosting.Services;
 using NetCord.Hosting.Services.ApplicationCommands;
@@ -25,18 +22,20 @@ builder.Services
 	.AddApplicationCommands()
 	.AddGatewayHandlers(typeof(Program).Assembly);
 
-// For some reason adding user secrets isn't done by default for HostApplicationBuilder. Also for some reason
-// my builder.Environment turned into Production, for some reason. Idk why, but it doesn't really matter to me.
+builder.Services.AddHostedService<MainLoop>();
+
+// For some reason my builder.Environment turned into Production, for some reason. Idk why, just gonna do this for now.
 #if DEBUG
 	builder.Configuration.AddUserSecrets<Program>();
 #endif
 
 // I figure the different scopes would be each individual handlker
-builder.Services.AddScoped<MainLoop>();
-builder.Services.AddScoped<WordManager>();
-builder.Services.AddScoped<DatabaseInterface>();
-builder.Services.AddScoped<MessageSender>();
-builder.Services.AddScoped<UnexpectedErrorHandler>();
+// TODO redesign this later. I figure for now its fine since the DbContextFactory is singleton (I Think). For now the background service is a singleton
+// and as such needs the rest to be singleton. I imagine this will work but clearly its a bad approach.
+builder.Services.AddSingleton<WordManager>();
+builder.Services.AddSingleton<DatabaseInterface>();
+builder.Services.AddSingleton<MessageSender>();
+builder.Services.AddSingleton<UnexpectedErrorHandler>();
 
 builder.Services.AddHttpClient<DictionaryApiInterface>();
 

@@ -5,10 +5,10 @@ using System.Text.Json.Serialization;
 namespace WordOfTheDayBot;
 
 public class DictionaryApiInterface(HttpClient httpClient) {
-	public async Task<DefinitionLookupResult> GetDefinitions(string word) {
-		using HttpResponseMessage apiResp = await httpClient.GetAsync($"https://api.dictionaryapi.dev/api/v2/entries/en/{word}");
+	public async Task<DefinitionLookupResult> GetDefinitions(string word, CancellationToken stoppingToken) {
+		using HttpResponseMessage apiResp = await httpClient.GetAsync($"https://api.dictionaryapi.dev/api/v2/entries/en/{word}", stoppingToken);
 		if (apiResp.IsSuccessStatusCode) {
-			List<DictionaryApiResponse> responseClassObj = await apiResp.Content.ReadFromJsonAsync<List<DictionaryApiResponse>>() ?? throw new Exception("Error deserializing the api response into json");
+			List<DictionaryApiResponse> responseClassObj = await apiResp.Content.ReadFromJsonAsync<List<DictionaryApiResponse>>(stoppingToken) ?? throw new Exception("Error deserializing the api response into json");
 			if (responseClassObj.Count == 0) {
 				return new DefinitionLookupResult.NotFound();
 			}

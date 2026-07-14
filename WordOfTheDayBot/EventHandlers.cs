@@ -1,6 +1,5 @@
 ﻿using NetCord.Gateway;
 using NetCord.Hosting.Gateway;
-using Serilog.Core;
 
 namespace WordOfTheDayBot;
 
@@ -17,7 +16,7 @@ some kind of entry point already, which is nice.
 public sealed class GuildJoinHandler(DatabaseInterface databaseInterface, ILogger<GuildJoinHandler> logger) : IGuildCreateGatewayHandler {
 	public async ValueTask HandleAsync(GuildCreateEventArgs arg) {
 		logger.LogDebug("GuildJoinHandler called");
-		await databaseInterface.AddServerIfNotExists(arg.GuildId);
+		await databaseInterface.AddServerIfNotExists(arg.GuildId, CancellationToken.None);
 	}
 }
 
@@ -25,13 +24,6 @@ public sealed class GuildJoinHandler(DatabaseInterface databaseInterface, ILogge
 public sealed class GuildExitHandler(DatabaseInterface databaseInterface, ILogger<GuildExitHandler> logger) : IGuildDeleteGatewayHandler {
 	public async ValueTask HandleAsync(GuildDeleteEventArgs arg) {
 		logger.LogDebug("GuildExitHandler called");
-		await databaseInterface.DeleteServerByGuildId(arg.GuildId);
-	}
-}
-
-public sealed class ReadyHandler(MainLoop mainLoop, ILogger<ReadyHandler> logger) : IReadyGatewayHandler {
-	public async ValueTask HandleAsync(ReadyEventArgs arg) {
-		logger.LogDebug("ReadyHandler called");
-		await mainLoop.RunHourly();
+		await databaseInterface.DeleteServerByGuildId(arg.GuildId, CancellationToken.None);
 	}
 }
