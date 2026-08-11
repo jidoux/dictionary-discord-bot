@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace WordOfTheDayBot.Database;

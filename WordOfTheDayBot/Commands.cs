@@ -1,4 +1,4 @@
-﻿using NetCord;
+using NetCord;
 using NetCord.Services;
 using NetCord.Services.ApplicationCommands;
 
@@ -29,7 +29,7 @@ public sealed class Commands(DatabaseInterface databaseInterface, UnexpectedErro
 
 			if (hourUtc > 23 || hourUtc < 0) {
 				return "Invalid hour value specified.";
-			} 
+			}
 			await databaseInterface.SaveServerSettings(guildId, channel.Id, hourUtc, CancellationToken.None);
 
 			return $"The word of the day will send at channel <#{channel.Id}>, at {hourUtc}:00 UTC.";

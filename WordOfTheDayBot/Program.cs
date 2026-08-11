@@ -26,7 +26,7 @@ builder.Services.AddHostedService<MainLoop>();
 
 // For some reason my builder.Environment turned into Production, for some reason. Idk why, just gonna do this for now.
 #if DEBUG
-	builder.Configuration.AddUserSecrets<Program>();
+builder.Configuration.AddUserSecrets<Program>();
 #endif
 
 // I figure the different scopes would be each individual handlker

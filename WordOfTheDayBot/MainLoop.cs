@@ -1,4 +1,4 @@
-﻿using WordOfTheDayBot.Database;
+using WordOfTheDayBot.Database;
 
 namespace WordOfTheDayBot;
 
@@ -13,6 +13,9 @@ public sealed class MainLoop(DatabaseInterface databaseInterface, WordManager wo
 				TimeSpan delayUntilNextHour = nextHour - now;
 
 				await Task.Delay(delayUntilNextHour, stoppingToken);
+				// Wait an additional minute... there is a timing error where it somehow is getting the same DateTime.UtcNow.Hour 2 hours in a row
+				// i.e. 11:00 and 12:00, returns 12 both times. Can also return 12 no times, 1 time, etc.
+				await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
 
 				await DoHourlyWork(stoppingToken);
 			}
