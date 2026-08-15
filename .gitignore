@@ -11,6 +11,9 @@
 *.sln.docstates
 *.env
 
+# I wnat to ignore my output folder for the word list curator... seems reasonable enough
+output/
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

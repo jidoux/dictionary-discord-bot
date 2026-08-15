@@ -1,0 +1,11 @@
+services:
+  application:
+    container_name: dictionarybot-curator
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      # PYTHONUNBUFFERED just makes print statements not get buffered...
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ./output:/output
