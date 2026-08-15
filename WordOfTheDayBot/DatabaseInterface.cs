@@ -4,8 +4,7 @@ using WordOfTheDayBot.Database;
 namespace WordOfTheDayBot;
 
 public sealed class DatabaseInterface(IDbContextFactory<AppDbContext> contextFactory) {
-	public async Task<List<Server>> FindAllServersToSendForThisUTCHour(CancellationToken stoppingToken) {
-		int currentHourUTC = DateTime.UtcNow.Hour;
+	public async Task<List<Server>> FindAllServersToSendForThisUTCHour(int currentHourUTC, CancellationToken stoppingToken) {
 		await using AppDbContext db = await contextFactory.CreateDbContextAsync(stoppingToken);
 		return await db.Servers.Where(s => s.HourToSendDailyWordUTC == currentHourUTC).ToListAsync(stoppingToken);
 	}

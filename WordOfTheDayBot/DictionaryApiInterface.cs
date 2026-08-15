@@ -6,9 +6,15 @@ namespace WordOfTheDayBot;
 
 public class DictionaryApiInterface(HttpClient httpClient) {
 	public async Task<DefinitionLookupResult> GetDefinitions(string word, CancellationToken stoppingToken) {
-		using HttpResponseMessage apiResp = await httpClient.GetAsync($"https://api.dictionaryapi.dev/api/v2/entries/en/{word}", stoppingToken);
+		UriBuilder uriBuilder = new("https", "api.dictionaryapi.dev") {
+			Scheme = "https",
+			Path = "api/v2/entries/en/",
+			Query = word,
+		};
+		_ = uriBuilder.Uri;
+		using HttpResponseMessage apiResp = await httpClient.GetAsync(uriBuilder.Uri, stoppingToken);
 		if (apiResp.IsSuccessStatusCode) {
-			List<DictionaryApiResponse> responseClassObj = await apiResp.Content.ReadFromJsonAsync<List<DictionaryApiResponse>>(stoppingToken) ?? throw new Exception("Error deserializing the api response into json");
+			List<DictionaryApiResponse> responseClassObj = await apiResp.Content.ReadFromJsonAsync<List<DictionaryApiResponse>>(stoppingToken) ?? throw new Exception($"Error deserializing the api response into json with word {word}");
 			if (responseClassObj.Count == 0) {
 				return new DefinitionLookupResult.NotFound();
 			}
@@ -44,27 +50,27 @@ public class DictionaryApiResponse {
 	[JsonPropertyName("word")]
 	public required string Word { get; set; }
 	[JsonPropertyName("meanings")]
-	public List<Meanings> Meanings { get; set; } = [];
+	public IReadOnlyCollection<Meanings> Meanings { get; set; } = [];
 	[JsonPropertyName("sourceUrls")]
-	public List<string> SourceUrls { get; set; } = [];
+	public IReadOnlyCollection<string> SourceUrls { get; set; } = [];
 }
 
 public class Meanings {
 	[JsonPropertyName("partOfSpeech")]
 	public required string PartOfSpeech { get; set; }
 	[JsonPropertyName("definitions")]
-	public List<Definition> Definitions { get; set; } = [];
+	public IReadOnlyCollection<Definition> Definitions { get; set; } = [];
 	[JsonPropertyName("synonyms")]
-	public List<string> Synonyms { get; set; } = [];
+	public IReadOnlyCollection<string> Synonyms { get; set; } = [];
 	[JsonPropertyName("antonyms")]
-	public List<string> Antonyms { get; set; } = [];
+	public IReadOnlyCollection<string> Antonyms { get; set; } = [];
 }
 
 public class Definition {
 	[JsonPropertyName("definition")]
 	public required string DictionaryDefinition { get; set; }
 	[JsonPropertyName("synonyms")]
-	public List<string> Synonyms { get; set; } = [];
+	public IReadOnlyCollection<string> Synonyms { get; set; } = [];
 	[JsonPropertyName("antonyms")]
-	public List<string> Antonyms { get; set; } = [];
+	public IReadOnlyCollection<string> Antonyms { get; set; } = [];
 }

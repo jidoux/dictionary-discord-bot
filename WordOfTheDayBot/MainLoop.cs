@@ -33,7 +33,11 @@ internal sealed class MainLoop(DatabaseInterface databaseInterface, WordManager 
 		try {
 			logger.LogInformation("DoHourlyWork() called once again");
 
-			allServersToSendToRightNow = await databaseInterface.FindAllServersToSendForThisUTCHour(stoppingToken);
+			int currentHourUTC = DateTime.UtcNow.Hour;
+			if (logger.IsEnabled(LogLevel.Information)) {
+				logger.LogInformation("Trying to find all servers to send for this UTC hour: {CurrentHourUTC}", currentHourUTC);
+			}
+			allServersToSendToRightNow = await databaseInterface.FindAllServersToSendForThisUTCHour(currentHourUTC, stoppingToken);
 			if (allServersToSendToRightNow.Count == 0) {
 				return;
 			}
