@@ -1,6 +1,6 @@
-﻿namespace WordOfTheDayBot;
+namespace WordOfTheDayBot;
 
-public sealed class UnexpectedErrorHandler(ILogger<UnexpectedErrorHandler> logger, DatabaseInterface databaseInterface) {
+internal sealed class UnexpectedErrorHandler(ILogger<UnexpectedErrorHandler> logger, DatabaseInterface databaseInterface) {
 	public async Task HandleError(Exception ex, string? additionalMessage = null, CancellationToken stoppingToken = default) {
 		// I figure I should probably guarantee this never throws...
 		try {

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace WordOfTheDayBot.Database.Migrations;
 
 /// <inheritdoc />
-public partial class InitialSetup : Migration {
+internal partial class InitialSetup : Migration {
 	/// <inheritdoc />
 	protected override void Up(MigrationBuilder migrationBuilder) {
 		migrationBuilder.EnsureSchema(

@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.ComponentModel.DataAnnotations;
 
 namespace WordOfTheDayBot.Database;
 
-public class Error {
+internal class Error {
 	public int Id { get; init; }
 	public required string Exception { get; init; }
 	[MaxLength(2048)]

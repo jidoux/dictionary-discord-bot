@@ -5,7 +5,7 @@ using NetCord.Services.ApplicationCommands;
 namespace WordOfTheDayBot;
 
 // For now not touching UserCommand or MessageCommand just cuz can't think of any reason I'd need it.
-public sealed class Commands(DatabaseInterface databaseInterface, UnexpectedErrorHandler unexpectedErrorHandler, ILogger<Commands> logger) : ApplicationCommandModule<ApplicationCommandContext> {
+internal sealed class Commands(DatabaseInterface databaseInterface, UnexpectedErrorHandler unexpectedErrorHandler, ILogger<Commands> logger) : ApplicationCommandModule<ApplicationCommandContext> {
 	//[SlashCommand("pong", "Pong!")]
 	//public static string Pong() => "Ping!";
 

@@ -3,7 +3,7 @@ using WordOfTheDayBot.Database;
 
 namespace WordOfTheDayBot;
 
-public sealed class DatabaseInterface(IDbContextFactory<AppDbContext> contextFactory) {
+internal sealed class DatabaseInterface(IDbContextFactory<AppDbContext> contextFactory) {
 	public async Task<List<Server>> FindAllServersToSendForThisUTCHour(CancellationToken stoppingToken) {
 		int currentHourUTC = DateTime.UtcNow.Hour;
 		await using AppDbContext db = await contextFactory.CreateDbContextAsync(stoppingToken);

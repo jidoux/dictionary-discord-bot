@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace WordOfTheDayBot.Database;
 
-public class Server {
+internal class Server {
 	public int Id { get; init; }
 	public ulong DiscordGuildId { get; init; }
 	public ulong DiscordChannelIdToSendWordsTo { get; set; }

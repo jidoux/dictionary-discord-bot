@@ -1,10 +1,10 @@
-﻿using NetCord;
+using NetCord;
 using NetCord.Rest;
 using System.Text;
 
 namespace WordOfTheDayBot;
 
-public class MessageSender(RestClient restClient) {
+internal class MessageSender(RestClient restClient) {
 	public async Task SendWordOfTheDayPoll(WordAndDefinitions wordAndDefinitions, ulong channelId, CancellationToken stoppingToken) {
 		StringBuilder definitionsText = new();
 		foreach (DefinitionAndPartOfSpeech definitionAndPartOfSpeech in wordAndDefinitions.Definitions) {

@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WordOfTheDayBot.Database;
 
-public class SentWord {
+internal class SentWord {
 	public int Id { get; init; }
 	public required string Word { get; init; }
 	[ForeignKey(nameof(Server))]

@@ -1,4 +1,4 @@
-﻿using NetCord.Gateway;
+using NetCord.Gateway;
 using NetCord.Hosting.Gateway;
 
 namespace WordOfTheDayBot;
@@ -13,7 +13,7 @@ some kind of entry point already, which is nice.
 //public sealed class MessageCreateHandler : IMessageCreateGatewayHandler {
 
 // This fires when the bot starts up, or when the bot joins a given server.
-public sealed class GuildJoinHandler(DatabaseInterface databaseInterface, ILogger<GuildJoinHandler> logger) : IGuildCreateGatewayHandler {
+internal sealed class GuildJoinHandler(DatabaseInterface databaseInterface, ILogger<GuildJoinHandler> logger) : IGuildCreateGatewayHandler {
 	public async ValueTask HandleAsync(GuildCreateEventArgs arg) {
 		logger.LogDebug("GuildJoinHandler called");
 		await databaseInterface.AddServerIfNotExists(arg.GuildId, CancellationToken.None);
@@ -21,7 +21,7 @@ public sealed class GuildJoinHandler(DatabaseInterface databaseInterface, ILogge
 }
 
 // This seems reasonable enough. Not foolproof, but whatever.
-public sealed class GuildExitHandler(DatabaseInterface databaseInterface, ILogger<GuildExitHandler> logger) : IGuildDeleteGatewayHandler {
+internal sealed class GuildExitHandler(DatabaseInterface databaseInterface, ILogger<GuildExitHandler> logger) : IGuildDeleteGatewayHandler {
 	public async ValueTask HandleAsync(GuildDeleteEventArgs arg) {
 		logger.LogDebug("GuildExitHandler called");
 		await databaseInterface.DeleteServerByGuildId(arg.GuildId, CancellationToken.None);

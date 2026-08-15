@@ -1,5 +1,5 @@
-global using System.Text.Json;
 global using Microsoft.Extensions.Logging;
+global using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using NetCord.Hosting.Gateway;
 using NetCord.Hosting.Services;
@@ -71,7 +71,7 @@ host.AddModules(typeof(Program).Assembly);
 
 await host.RunAsync();
 
-public class UtcTimestampEnricher : ILogEventEnricher {
+internal class UtcTimestampEnricher : ILogEventEnricher {
 	public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory) {
 		logEvent.AddOrUpdateProperty(
 			propertyFactory.CreateProperty("UtcTimestamp", DateTime.UtcNow));

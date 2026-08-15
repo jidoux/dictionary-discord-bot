@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace WordOfTheDayBot.Database.Migrations;
 
 /// <inheritdoc />
-public partial class AddingChannelToSendToSinceIForgotThatBefore : Migration {
+internal partial class AddingChannelToSendToSinceIForgotThatBefore : Migration {
 	/// <inheritdoc />
 	protected override void Up(MigrationBuilder migrationBuilder) {
 		migrationBuilder.AddColumn<decimal>(
