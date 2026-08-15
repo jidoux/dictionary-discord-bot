@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WordOfTheDayBot.Database;
 
-internal class SentWord {
+public class SentWord {
 	public int Id { get; init; }
 	public required string Word { get; init; }
 	[ForeignKey(nameof(Server))]

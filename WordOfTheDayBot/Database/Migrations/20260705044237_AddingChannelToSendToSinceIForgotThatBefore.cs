@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WordOfTheDayBot.Database.Migrations;
 
 /// <inheritdoc />
-internal partial class AddingChannelToSendToSinceIForgotThatBefore : Migration {
+public partial class AddingChannelToSendToSinceIForgotThatBefore : Migration {
 	/// <inheritdoc />
 	protected override void Up(MigrationBuilder migrationBuilder) {
 		migrationBuilder.AddColumn<decimal>(

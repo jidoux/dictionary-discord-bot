@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WordOfTheDayBot.Database.Migrations;
 
 /// <inheritdoc />
-internal partial class AddGuildIdAndDateOnlyAttempt1 : Migration {
+public partial class AddGuildIdAndDateOnlyAttempt1 : Migration {
 	/// <inheritdoc />
 	protected override void Up(MigrationBuilder migrationBuilder) {
 		migrationBuilder.AlterColumn<TimeOnly>(

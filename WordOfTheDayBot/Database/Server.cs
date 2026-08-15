@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace WordOfTheDayBot.Database;
 
-internal class Server {
+public class Server {
 	public int Id { get; init; }
 	public ulong DiscordGuildId { get; init; }
 	public ulong DiscordChannelIdToSendWordsTo { get; set; }

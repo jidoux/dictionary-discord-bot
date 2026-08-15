@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace WordOfTheDayBot;
 
-internal class DictionaryApiInterface(HttpClient httpClient) {
+public class DictionaryApiInterface(HttpClient httpClient) {
 	public async Task<DefinitionLookupResult> GetDefinitions(string word, CancellationToken stoppingToken) {
 		using HttpResponseMessage apiResp = await httpClient.GetAsync($"https://api.dictionaryapi.dev/api/v2/entries/en/{word}", stoppingToken);
 		if (apiResp.IsSuccessStatusCode) {
@@ -33,14 +33,14 @@ internal class DictionaryApiInterface(HttpClient httpClient) {
 	}
 }
 
-internal abstract record DefinitionLookupResult {
-	internal sealed record Found(List<DefinitionAndPartOfSpeech> Definitions) : DefinitionLookupResult;
-	internal sealed record NotFound : DefinitionLookupResult;
-	internal sealed record Error(string Reason, HttpStatusCode StatusCode) : DefinitionLookupResult;
+public abstract record DefinitionLookupResult {
+	public sealed record Found(List<DefinitionAndPartOfSpeech> Definitions) : DefinitionLookupResult;
+	public sealed record NotFound : DefinitionLookupResult;
+	public sealed record Error(string Reason, HttpStatusCode StatusCode) : DefinitionLookupResult;
 }
 
 // Not including some fields that I don't expect I will care about.
-internal class DictionaryApiResponse {
+public class DictionaryApiResponse {
 	[JsonPropertyName("word")]
 	public required string Word { get; set; }
 	[JsonPropertyName("meanings")]
@@ -49,7 +49,7 @@ internal class DictionaryApiResponse {
 	public List<string> SourceUrls { get; set; } = [];
 }
 
-internal class Meanings {
+public class Meanings {
 	[JsonPropertyName("partOfSpeech")]
 	public required string PartOfSpeech { get; set; }
 	[JsonPropertyName("definitions")]
@@ -60,7 +60,7 @@ internal class Meanings {
 	public List<string> Antonyms { get; set; } = [];
 }
 
-internal class Definition {
+public class Definition {
 	[JsonPropertyName("definition")]
 	public required string DictionaryDefinition { get; set; }
 	[JsonPropertyName("synonyms")]

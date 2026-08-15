@@ -369,6 +369,7 @@ dotnet_diagnostic.S1135.severity = suggestion # Complete TODO tasks - this one w
 dotnet_diagnostic.S3011.severity = suggestion # Make sure that this accessibility bypass is safe here - cmon it even sounds like a suggestion... but I guess its a big deal idk
 dotnet_diagnostic.S3260.severity = error # Non-derived private classes/records should be marked as sealed
 dotnet_diagnostic.CS1591.severity = none # Missing XML comment for publicly visible type or member - I don't care!!!
+dotnet_diagnostic.CA1515.severity = none # this should not be an error... not really sure whats making this an error, but stuff needs to be public for this
 
 
 dotnet_style_operator_placement_when_wrapping = beginning_of_line

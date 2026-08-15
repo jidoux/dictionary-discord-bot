@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace WordOfTheDayBot.Database.Migrations;
 
 /// <inheritdoc />
-internal partial class InitialSetup : Migration {
+public partial class InitialSetup : Migration {
 	/// <inheritdoc />
 	protected override void Up(MigrationBuilder migrationBuilder) {
 		migrationBuilder.EnsureSchema(

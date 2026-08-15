@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace WordOfTheDayBot.Database.Migrations;
 
 /// <inheritdoc />
-internal partial class ChangingTimeToSendToIntAndAddingErrorsTable : Migration {
+public partial class ChangingTimeToSendToIntAndAddingErrorsTable : Migration {
 	/// <inheritdoc />
 	protected override void Up(MigrationBuilder migrationBuilder) {
 		migrationBuilder.DropColumn(

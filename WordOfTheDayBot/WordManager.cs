@@ -1,6 +1,6 @@
 namespace WordOfTheDayBot;
 
-internal sealed class WordManager(DictionaryApiInterface dictionaryApiInterface) {
+public sealed class WordManager(DictionaryApiInterface dictionaryApiInterface) {
 	private readonly Lazy<ValueTask<string[]>> _allWords = new(async () => {
 		// TODO test this when its a docker image
 		const string wordPoolPath = "word_pool.json";
@@ -38,6 +38,6 @@ internal sealed class WordManager(DictionaryApiInterface dictionaryApiInterface)
 	}
 }
 
-internal record WordAndDefinitions(string Word, List<DefinitionAndPartOfSpeech> Definitions);
+public record WordAndDefinitions(string Word, List<DefinitionAndPartOfSpeech> Definitions);
 
-internal record DefinitionAndPartOfSpeech(string Definition, string PartOfSpeech);
+public record DefinitionAndPartOfSpeech(string Definition, string PartOfSpeech);

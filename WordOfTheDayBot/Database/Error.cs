@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WordOfTheDayBot.Database;
 
-internal class Error {
+public class Error {
 	public int Id { get; init; }
 	public required string Exception { get; init; }
 	[MaxLength(2048)]

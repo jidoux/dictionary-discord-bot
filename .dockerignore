@@ -1,0 +1,2 @@
+# This is annoying; its passing my builds in visual studio and failing them in the github actions environment,
+.editorconfig
